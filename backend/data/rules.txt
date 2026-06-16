@@ -1,0 +1,4 @@
+##expected type for expenses:
+
+{Category,amount,Merchant,Date}
+
