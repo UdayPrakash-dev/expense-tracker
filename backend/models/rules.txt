@@ -1,0 +1,7 @@
+##expected type for expenses:
+
+{User,Category,amount,Merchant,Date}
+
+##expected type for Users:
+ { name,email,passwordHash}
+
