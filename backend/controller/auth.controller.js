@@ -2,21 +2,21 @@ const argon2 = require("argon2");
 const User = require("../models/users.model")
 const jwt = require("jsonwebtoken");
 
-async function signup(req,res){
-    try{
-        const {name, email, pass} = req.body;
-        
-        if(!name||!email||!pass){
+async function signup(req, res) {
+    try {
+        const { name, email, pass } = req.body;
+
+        if (!name || !email || !pass) {
             return res.status(400).json({
-                "message":"Name, Email and Password are required"
+                "message": "Name, Email and Password are required"
             });
         }
 
-        const exists = await User.findOne({email});
+        const exists = await User.findOne({ email });
 
-        if(exists){
+        if (exists) {
             return res.status(409).json({
-                message:"Email already registered!"
+                message: "Email already registered!"
             });
         }
 
@@ -27,36 +27,36 @@ async function signup(req,res){
             passwordHash
         })
 
-        console.log("success");
+        console.log(`User Added Successfully: ${user.name}`);
 
         return res.status(201).json({
-            id:user._id,
-            name:user.name,
-            email:user.email
+            id: user._id,
+            name: user.name,
+            email: user.email
         });
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return res.status(500).json({
-            message:"Internal Server Error"
+            message: "Internal Server Error"
         });
     }
 }
 
-async function login(req,res){
-    try{
-        const {email,pass} = req.body;
+async function login(req, res) {
+    try {
+        const { email, pass } = req.body;
 
-        if(!email||!pass){
+        if (!email || !pass) {
             return res.status(400).json({
-                message:"email and password are required for login!!"
+                message: "email and password are required for login!!"
             });
         }
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
 
-        if(!user){
-            return res.status(400).json({
-                message:"User not registered!!"
+        if (!user) {
+            return res.status(401).json({
+                message: "Invalid Email or Password"
             });
         }
         const validPass = await argon2.verify(
@@ -64,15 +64,15 @@ async function login(req,res){
             pass
         );
 
-        if(!validPass){
-            return res.status(400).json({
-                message:"Email or password incorrect!!"
+        if (!validPass) {
+            return res.status(401).json({
+                message: "Invalid Email or Password"
             });
         }
         const token = jwt.sign(
-            {id:user._id},
+            { id: user._id },
             process.env.JWT_SECRET,
-            {expiresIn:"1h"}
+            { expiresIn: "1h" }
         );
 
         return res.status(200).json(
@@ -82,10 +82,10 @@ async function login(req,res){
         );
 
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         res.status(500).json({
-            message:"Internal Server Error"
+            message: "Internal Server Error"
         });
     }
 }

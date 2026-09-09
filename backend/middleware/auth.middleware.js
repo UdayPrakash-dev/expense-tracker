@@ -1,20 +1,20 @@
 const jwt = require("jsonwebtoken");
 
-function authMiddleWare(req,res,next){
-    try{
+function authMiddleWare(req, res, next) {
+    try {
         const authHeader = req.headers.authorization;
 
-        if(!authHeader){
+        if (!authHeader) {
             return res.status(401).json({
-                error:"Authorization token required!!"
+                error: "Authorization token required!!"
             });
         }
 
-        const [scheme, token ] = authHeader.split(" ");
+        const [scheme, token] = authHeader.split(" ");
 
-        if(scheme!=="Bearer"||!token){
+        if (scheme !== "Bearer" || !token) {
             return res.status(401).json({
-                message:"Invalid authorisation token"
+                message: "Invalid authorisation token"
             });
         }
 
@@ -29,10 +29,10 @@ function authMiddleWare(req,res,next){
 
 
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return res.status(401).json({
-            message:"Invalid or expired token!"
+            message: "Invalid or expired token!"
         });
     }
 }

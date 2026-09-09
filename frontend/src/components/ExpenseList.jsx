@@ -10,7 +10,7 @@ const ExpenseList = ({ expenses, onRefresh }) => {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this expense?')) return;
-    
+
     try {
       setLoading(true);
       await deleteExpense(id);
@@ -53,25 +53,25 @@ const ExpenseList = ({ expenses, onRefresh }) => {
               <td>${Number(expense.Amount).toFixed(2)}</td>
               <td>
                 <div className="flex items-center gap-2" style={{ justifyContent: 'center' }}>
-                  <button 
+                  <button
                     onClick={() => navigate(`/${expense.id}`)}
-                    className="btn btn-secondary" 
+                    className="btn btn-secondary"
                     title="View Details"
                     style={{ padding: '0.5rem' }}
                   >
                     <Eye size={16} />
                   </button>
-                  <button 
+                  <button
                     onClick={() => navigate(`/edit/${expense.id}`)}
-                    className="btn btn-secondary" 
+                    className="btn btn-secondary"
                     title="Edit"
                     style={{ padding: '0.5rem' }}
                   >
                     <Pencil size={16} />
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleDelete(expense.id)}
-                    className="btn btn-danger" 
+                    className="btn btn-danger"
                     disabled={loading}
                     title="Delete"
                     style={{ padding: '0.5rem' }}

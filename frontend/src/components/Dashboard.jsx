@@ -69,7 +69,7 @@ const Dashboard = () => {
           </div>
           <span className="stat-value">${Number(total).toFixed(2)}</span>
         </div>
-        
+
         <div className="glass-panel stat-card">
           <div className="flex items-center gap-2 mb-4">
             <ListOrdered className="text-accent" size={24} />
@@ -83,9 +83,9 @@ const Dashboard = () => {
         <h2 style={{ fontWeight: 600, fontSize: '1.25rem' }}>Recent Expenses</h2>
         <div className="flex items-center gap-2">
           <label htmlFor="monthFilter" className="text-secondary">Filter:</label>
-          <select 
+          <select
             id="monthFilter"
-            className="form-input" 
+            className="form-input"
             style={{ width: 'auto', padding: '0.5rem 2rem 0.5rem 1rem' }}
             value={month}
             onChange={(e) => setMonth(e.target.value)}

@@ -8,26 +8,40 @@ require("dotenv").config();
 const expensesRouter = require('./routes/expenses.routes.js');
 const authRouter = require("./routes/auth.routes");
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     const start = Date.now();
+
+    res.on('finish', () => {
+        const end = Date.now();
+        console.log(`${req.method}:${req.url},time taken:${end - start}`);
+    })
     next();
-    const end = Date.now();
-    console.log(`${req.method}:${req.url},time taken:${end - start}`);
+
 })
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.send('Hello');
 });
 
 app.use(express.json());
 
-app.use('/auth',authRouter);
+app.use('/auth', authRouter);
 
-app.use('/expenses',expensesRouter);
+app.use('/expenses', expensesRouter);
 
-connectDB();
 
-app.listen(PORT,()=>{
-    console.log(`started listening at port ${PORT}: ${Date.now()}`);
-})
+async function startServer() {
+    try {
+        await connectDB();
 
+        app.listen(PORT, () => {
+            console.log(`Server is listening at port: ${PORT}`);
+        });
+    }
+    catch (error) {
+        console.error(`Failed to start server: ${error}`);
+        process.exit(1);
+    }
+}
+
+startServer();
