@@ -18,9 +18,10 @@ function authMiddleWare(req, res, next) {
             });
         }
 
+        const secret = process.env.JWT_SECRET || "super_secret_jwt_key_expense_tracker_2026_dev";
         const decoded = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            secret
         );
 
         req.user = decoded;

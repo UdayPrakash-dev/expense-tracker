@@ -64,7 +64,10 @@ async function getExpenses(req, res) {
 async function getExpenseByID(req, res) {
 
     try {
-        const expense = await expenses.findById(req.params.expenseId);
+        const expense = await expenses.findOne({
+            _id: req.params.expenseId,
+            userId: req.user.id
+        });
 
         if (!expense) {
             return res.status(404).json({
@@ -83,7 +86,10 @@ async function getExpenseByID(req, res) {
 
 async function deleteExpense(req, res) {
     try {
-        const expense = await expenses.findByIdAndDelete(req.params.expenseId);
+        const expense = await expenses.findOneAndDelete({
+            _id: req.params.expenseId,
+            userId: req.user.id
+        });
         if (!expense) {
             return res.status(404).json({
                 message: "Expense Not Found!!"
@@ -104,7 +110,17 @@ async function deleteExpense(req, res) {
 
 async function modifyExpenseByID(req, res) {
     try {
-        const expense = await expenses.findByIdAndUpdate(req.params.expenseId,
+
+        if (req.body.Amount !== undefined && !isValidAmount(req.body.Amount)) {
+            return res.status(400).json({
+                error: "Invalid Amount"
+            })
+        }
+        const expense = await expenses.findOneAndUpdate(
+            {
+                _id: req.params.expenseId,
+                userId: req.user.id
+            },
             {
                 Category: req.body.Category,
                 Amount: req.body.Amount,

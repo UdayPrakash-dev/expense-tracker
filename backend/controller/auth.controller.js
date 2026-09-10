@@ -69,9 +69,10 @@ async function login(req, res) {
                 message: "Invalid Email or Password"
             });
         }
+        const secret = process.env.JWT_SECRET || "super_secret_jwt_key_expense_tracker_2026_dev";
         const token = jwt.sign(
             { id: user._id },
-            process.env.JWT_SECRET,
+            secret,
             { expiresIn: "1h" }
         );
 
