@@ -11,6 +11,7 @@ backend/dist/
 backend/build/
 
 # Logs
+logs/
 *.log
 
 # OS files
@@ -19,3 +20,7 @@ backend/build/
 # IDE files
 .vscode/
 .idea/
+
+#test files
+*.spec.js
+*.test.js

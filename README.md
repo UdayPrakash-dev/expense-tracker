@@ -69,26 +69,7 @@ Generate detailed monthly reports including:
 
 These reports will help users better understand and manage their finances.
 
-### 4. User Authentication & Authorization
 
-Introduce secure user management using:
 
-* User Registration
-* User Login
-* Password Hashing
-* JWT-based Authentication
-* Protected API Routes
-
-This will enable each user to securely manage their own expenses.
-
-### 5. Analytics Dashboard
-
-Develop an analytics dashboard to provide insights into spending behavior, including:
-
-* Monthly spending trends
-* Category distribution charts
-* Top merchants
-* Spending patterns over time
-* Budget tracking and alerts
 
 The goal is to transform the application from a simple expense tracker into a personal finance analytics platform.
