@@ -1,6 +1,6 @@
 # Expense Tracker
 
-A full-stack,production-grade personal finanace and  expense tracking application built with **Node.js, Express, MongoDB, React 19, and Vite**.
+A full-stack, production-grade personal finanace and  expense tracking application built with **Node.js, Express, MongoDB, React 19, and Vite**.
 
 ## Table of Contents
 
@@ -36,6 +36,7 @@ A full-stack,production-grade personal finanace and  expense tracking applicatio
 
 ## Project Structure
 
+```text
  backend/                                # Express.js Backend
 ├── server.js                              # Express app entry point
 ├── config/                             # Configuration files
@@ -58,7 +59,9 @@ A full-stack,production-grade personal finanace and  expense tracking applicatio
 ├── logs/                               # Application logs (created by Winston)
 ├── package.json                        # Backend dependencies
 └── .env                                # Put all secrets here
+```
 
+```text
  frontend/                               # React + Vite Frontend
 ├── index.html                          # HTML template entry point
 ├── vite.config.js                      # Vite config with /api reverse proxy
@@ -97,7 +100,7 @@ A full-stack,production-grade personal finanace and  expense tracking applicatio
     ├── App.jsx                         # Main Router & context assembly
     ├── main.jsx                        # React root mount entry point
     └── index.css                       # Glassmorphic design system styles
-
+```
 
 
 ## Tech Stack
@@ -121,9 +124,35 @@ A full-stack,production-grade personal finanace and  expense tracking applicatio
 - PUT /expenses/:expenseId
 - DELETE /expenses/:expenseId
 - GET /expenses/month/:month
-- GET /expenses/total
+- GET /expenses/total 
 
 ## Running the Project
+
+### Setting up `.env` file
+
+Create a `.env` file inside the `backend/` directory:
+
+```env
+PORT=PORT_NUMBER
+JWT_SECRET=your_long_secret_string
+MONGODB_URI=your_mongodb_connection_string
+```
+
+Replace the placeholder values with your actual configuration.
+
+> **Note:** Do not commit the `.env` file to GitHub. Add `.env` to `.gitignore`.
+
+### frontend
+cd frontend
+npm run dev
+
+### backend
+cd backend
+npm run dev
+
+### Swagger API
+after running the backend visit:
+http://localhost:PORT/api-docs
 
 
 ## Future Enhancements
