@@ -1,15 +1,95 @@
 # Expense Tracker
 
-A full-stack, production-grade personal finanace and  expense tracking application built with **Node.js, Express, MongoDB, React 19, and Vite**.
+A full-stack, production-grade personal finance and  expense tracking application built with **Node.js, Express, MongoDB, React 19, and Vite**.
 
 ## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+  - [Request Flow](#request-flow)
+- [Features](#features)
+  - [Core Features](#core-features)
+  - [Production Features](#production-features)
+- [Project Structure](#project-structure)
+- [Tech Stack](#tech-stack)
+- [API Endpoints](#api-endpoints)
+- [Running the Project](#running-the-project)
+  - [Setting up `.env`](#setting-up-the-env-file)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+  - [Swagger API](#swagger-api)
+- [Future Enhancements](#future-enhancements)
+  - [CSV Import](#1-csv-import-from-payment-applications)
+  - [Monthly Expense Reports](#2-monthly-expense-reports)
 
 
 
 ## Overview
 
+Expense Tracker is a full-stack personal finance application for managing and analysing personal expenses.
+
+The application uses a React frontend for the user interface and an Express.js backend that provides REST APIs for authentication and expense management. MongoDB is used for persistent data storage.
+
+Users can create, view, update, delete, filter, and analyse their expenses. Authentication is handled using JWT, while Winston provides application logging and Swagger provides interactive API documentation.
+
+---
 
 ## Architecture
+
+The application follows a **client-server architecture** consisting of a React frontend, Express.js backend, and MongoDB database.
+
+```text
+                         Client
+                           │
+                           ▼
+                  React + Vite Frontend
+                           │
+                     HTTP / REST API
+                           │
+                           ▼
+                  Express.js Backend
+                           │
+              ┌────────────┼─────────────┐
+              │            │             │
+              ▼            ▼             ▼
+        Rate Limiter   Auth Middleware  Routes
+              │            │            |
+              └────────────┤────────────┘
+                           ▼
+                     Controllers
+                           │
+                           ▼
+                       Mongoose
+                           │
+                           ▼
+                        MongoDB
+
+              ┌─────────────────────────┐
+              │ Centralized Error       │
+              │ Handling Middleware     │
+              ├─────────────────────────┤
+              │ Logging Middleware      │
+              │ Winston Logger          │
+              ├─────────────────────────┤
+              │ Health Check Endpoint   │
+              └─────────────────────────┘
+```
+
+### Request Flow
+
+1. The user interacts with the React frontend.
+2. The frontend sends REST API requests to the Express backend.
+3. Rate limiting controls incoming requests.
+4. Authentication middleware validates JWT-protected requests.
+5. Controllers handle the application logic.
+6. Mongoose communicates with MongoDB.
+7. The response is returned to the frontend.
+8. Logging middleware records application activity.
+9. Centralized error handling provides consistent error responses.
+10. The health check endpoint provides basic service health information.
+11. Swagger provides interactive API documentation and testing.
+
+---
 
 
 
@@ -24,21 +104,21 @@ A full-stack, production-grade personal finanace and  expense tracking applicati
 - Calculate total expenses
 - Analyse expenses
 
-### Production Grade Features
+### Production Features
 
-- User authentication
-- Secure data storage
-- Observability and Reliability
-    - Error handling
-    - Logging
-    - Monitoring(Health Checks)
-- Testing
+- User authentication with JWT
+- Centralised Error handling
+- Logging with Winston
+- Health Checks
+- Rate Limiting
+
+
 
 ## Project Structure
 
 ```text
  backend/                                # Express.js Backend
-├── server.js                              # Express app entry point
+├── server.js                           # Express app entry point
 ├── config/                             # Configuration files
 │   ├── swagger.js                      # API documentation
 │   ├── db.js                           # Database connection
@@ -48,7 +128,7 @@ A full-stack, production-grade personal finanace and  expense tracking applicati
 │   └── expenses.controller.js          # Expense management controllers
 ├── middleware/                         # Middleware functions
 │   ├── auth.middleware.js              # JWT authentication middleware
-│   └── error.middleware.js           # Global error handling middleware
+│   └── error.middleware.js             # Global error handling middleware
 ├── models/                             # Mongoose schemas/models
 │   ├── expenses.model.js               # Expense model
 │   └── user.model.js                   # User model
@@ -58,7 +138,9 @@ A full-stack, production-grade personal finanace and  expense tracking applicati
 │   └── health.routes.js                # Health routes
 ├── logs/                               # Application logs (created by Winston)
 ├── package.json                        # Backend dependencies
-└── .env                                # Put all secrets here
+├── .env(needs to be created)           # Put all secrets here
+└── .env.example                        # template to create a .env file
+
 ```
 
 ```text
@@ -110,6 +192,9 @@ A full-stack, production-grade personal finanace and  expense tracking applicati
 - Node.js
 - Express
 - MongoDB
+- JWT
+- Winston
+- Swagger
 
 ### Frontend
 
@@ -118,13 +203,15 @@ A full-stack, production-grade personal finanace and  expense tracking applicati
 
 ## API Endpoints
 
-- POST /expenses
-- GET /expenses/getExpenses
-- GET /expenses/:expenseId
-- PUT /expenses/:expenseId
-- DELETE /expenses/:expenseId
-- GET /expenses/month/:month
-- GET /expenses/total 
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/expenses` | Create an expense |
+| GET | `/expenses/getExpenses` | Get all expenses |
+| GET | `/expenses/:expenseId` | Get an expense by ID |
+| PUT | `/expenses/:expenseId` | Update an expense |
+| DELETE | `/expenses/:expenseId` | Delete an expense |
+| GET | `/expenses/month/:month` | Get expenses by month |
+| GET | `/expenses/total` | Get total expenses |
 
 ## Running the Project
 
@@ -142,17 +229,23 @@ Replace the placeholder values with your actual configuration.
 
 > **Note:** Do not commit the `.env` file to GitHub. Add `.env` to `.gitignore`.
 
-### frontend
+### Frontend
+```bash
 cd frontend
+npm install
 npm run dev
+```
 
-### backend
+### Backend
+```bash
 cd backend
+npm install
 npm run dev
+```
 
 ### Swagger API
-after running the backend visit:
-http://localhost:PORT/api-docs
+After running the backend visit:
+'http://localhost:PORT/api-docs'
 
 
 ## Future Enhancements
@@ -168,20 +261,7 @@ Allow users to upload transaction statements exported from applications such as:
 
 The system will parse CSV files, validate transactions, and automatically import expenses into the database.
 
-### 2. Automatic Expense Categorization
-
-Categorize expenses into predefined groups such as:
-
-* Food & Dining
-* Transportation
-* Shopping
-* Entertainment
-* Utilities
-* Healthcare
-
-Categories can initially be assigned using merchant-based rules and later enhanced using machine learning techniques.
-
-### 3. Monthly Expense Reports
+### 2. Monthly Expense Reports
 
 Generate detailed monthly reports including:
 
@@ -192,7 +272,6 @@ Generate detailed monthly reports including:
 
 These reports will help users better understand and manage their finances.
 
-
-
+---
 
 The goal is to transform the application from a simple expense tracker into a personal finance analytics platform.
