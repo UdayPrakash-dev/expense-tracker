@@ -7,12 +7,15 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
 const connectDB = require("./config/db");
+const setupSwagger = require('./config/swagger');
 require("dotenv").config();
 const errorHandler = require('./middleware/error.middleware');
 
 const expensesRouter = require('./routes/expenses.routes.js');
 const authRouter = require("./routes/auth.routes");
 const healthRouter = require('./routes/health.routes');
+
+setupSwagger(app);
 
 app.use(helmet());
 
