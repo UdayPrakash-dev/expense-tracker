@@ -1,4 +1,4 @@
-# Expense Tracker
+# Expense Tracker v1.0.0
 
 A full-stack, production-grade personal finance and  expense tracking application built with **Node.js, Express, MongoDB, React 19, and Vite**.
 
