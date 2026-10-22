@@ -27,6 +27,7 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.6.0",
+    "mongoose": "^9.11.3",
     "morgan": "^1.12.1",
     "parse-csv": "^0.2.0",
     "swagger-jsdoc": "^6.3.0",

@@ -8,11 +8,20 @@ async function signup(req, res) {
 
         if (!name || !email || !pass) {
             return res.status(400).json({
-                "message": "Name, Email and Password are required"
+                message: "Name, Email and Password are required"
             });
         }
 
-        const exists = await User.findOne({ email });
+        if (typeof pass !== 'string' || pass.length < 6) {
+            return res.status(400).json({
+                message: "Password must be at least 6 characters long"
+            });
+        }
+
+        const normalizedEmail = email.toLowerCase().trim();
+        const normalizedName = name.trim();
+
+        const exists = await User.findOne({ email: normalizedEmail });
 
         if (exists) {
             return res.status(409).json({
@@ -22,10 +31,10 @@ async function signup(req, res) {
 
         const passwordHash = await argon2.hash(pass);
         const user = await User.create({
-            name,
-            email,
+            name: normalizedName,
+            email: normalizedEmail,
             passwordHash
-        })
+        });
 
         console.log(`User Added Successfully: ${user.name}`);
 
@@ -37,6 +46,11 @@ async function signup(req, res) {
     }
     catch (error) {
         console.log(error);
+        if (error.code === 11000) {
+            return res.status(409).json({
+                message: "Email already registered!"
+            });
+        }
         return res.status(500).json({
             message: "Internal Server Error"
         });
@@ -52,7 +66,8 @@ async function login(req, res) {
                 message: "email and password are required for login!!"
             });
         }
-        const user = await User.findOne({ email });
+        const normalizedEmail = email.toLowerCase().trim();
+        const user = await User.findOne({ email: normalizedEmail });
 
         if (!user) {
             return res.status(401).json({
@@ -69,18 +84,21 @@ async function login(req, res) {
                 message: "Invalid Email or Password"
             });
         }
-        const secret = process.env.JWT_SECRET || "super_secret_jwt_key_expense_tracker_2026_dev";
+        const secret = process.env.JWT_SECRET;
         const token = jwt.sign(
             { id: user._id },
             secret,
             { expiresIn: "1h" }
         );
 
-        return res.status(200).json(
-            {
-                token
+        return res.status(200).json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
             }
-        );
+        });
 
     }
     catch (error) {

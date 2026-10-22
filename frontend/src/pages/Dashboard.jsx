@@ -37,8 +37,10 @@ const Dashboard = () => {
       const totalData = await getTotalExpenses();
       setTotalSpent(Number(totalData.sum || totalData.Total || 0));
 
-      // 2. Fetch all user expenses
-      const data = await getExpenses();
+      // 2. Fetch user expenses (using getExpensesByMonth if month is filtered)
+      const data = month !== 'all'
+        ? await getExpensesByMonth(month, year !== 'all' ? year : undefined)
+        : await getExpenses();
       setExpenses(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -48,7 +50,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [addToast]);
+  }, [month, year, addToast]);
 
   useEffect(() => {
     loadDashboardData();
@@ -63,7 +65,7 @@ const Dashboard = () => {
   // Extract unique years from actual expense data
   const availableYears = useMemo(() => {
     const yearsSet = new Set(
-      expenses.map((e) => new Date(e.Date).getFullYear()).filter((y) => !isNaN(y))
+      expenses.map((e) => new Date(e.Date).getUTCFullYear()).filter((y) => !isNaN(y))
     );
     // Always include current year
     yearsSet.add(new Date().getFullYear());
@@ -74,8 +76,8 @@ const Dashboard = () => {
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
       const expDate = new Date(e.Date);
-      const expMonth = expDate.getMonth() + 1;
-      const expYear = expDate.getFullYear();
+      const expMonth = expDate.getUTCMonth() + 1;
+      const expYear = expDate.getUTCFullYear();
 
       // Search match (merchant or category)
       const matchSearch =
@@ -153,10 +155,10 @@ const Dashboard = () => {
       {/* Stats Summary Cards */}
       <div className="stats-grid">
         <StatCard
-          title="All-Time Total"
-          value={`₹${totalSpent.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          title={month !== 'all' || category !== 'all' || search ? 'Period Total' : 'All-Time Total'}
+          value={`₹${(month !== 'all' || category !== 'all' || search ? filteredTotal : totalSpent).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           icon={IndianRupee}
-          subtitle="Cumulative recorded expenditure"
+          subtitle={month !== 'all' || category !== 'all' || search ? 'Expenditure for current selection' : 'Cumulative recorded expenditure'}
           color="#10b981"
         />
         <StatCard

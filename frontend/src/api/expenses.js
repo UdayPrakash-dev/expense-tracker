@@ -23,9 +23,9 @@ export const getTotalExpenses = async () => {
 
 export const addExpense = async (expenseData) => {
   const payload = {
-    Category: expenseData.Category.trim(),
+    Category: String(expenseData.Category || '').trim(),
     Amount: Number(expenseData.Amount),
-    Merchant: expenseData.Merchant.trim(),
+    Merchant: String(expenseData.Merchant || '').trim(),
     Date: expenseData.Date,
   };
   const response = await API.post('/expenses', payload);
@@ -33,12 +33,11 @@ export const addExpense = async (expenseData) => {
 };
 
 export const updateExpense = async (id, expenseData) => {
-  const payload = {
-    Category: expenseData.Category.trim(),
-    Amount: Number(expenseData.Amount),
-    Merchant: expenseData.Merchant.trim(),
-    Date: expenseData.Date,
-  };
+  const payload = {};
+  if (expenseData.Category !== undefined) payload.Category = String(expenseData.Category).trim();
+  if (expenseData.Amount !== undefined) payload.Amount = Number(expenseData.Amount);
+  if (expenseData.Merchant !== undefined) payload.Merchant = String(expenseData.Merchant).trim();
+  if (expenseData.Date !== undefined) payload.Date = expenseData.Date;
   const response = await API.put(`/expenses/${id}`, payload);
   return response.data;
 };

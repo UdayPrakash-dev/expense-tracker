@@ -10,7 +10,7 @@ function authMiddleWare(req, res, next) {
             });
         }
 
-        const [scheme, token] = authHeader.split(" ");
+        const [scheme, token] = authHeader.trim().split(/\s+/);
 
         if (scheme !== "Bearer" || !token) {
             return res.status(401).json({
@@ -18,7 +18,7 @@ function authMiddleWare(req, res, next) {
             });
         }
 
-        const secret = process.env.JWT_SECRET || "super_secret_jwt_key_expense_tracker_2026_dev";
+        const secret = process.env.JWT_SECRET;
         const decoded = jwt.verify(
             token,
             secret

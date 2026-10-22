@@ -37,17 +37,24 @@ const Signup = () => {
     setLoading(true);
     setError(null);
 
+    let signedUp = false;
     try {
       await signup(name.trim(), email.trim(), password);
+      signedUp = true;
       addToast('Account created successfully! Logging you in...', 'success');
       
       // Automatically log the user in
       await login(email.trim(), password);
       navigate('/', { replace: true });
     } catch (err) {
-      const msg = err.response?.data?.message || err.response?.data?.error || 'Registration failed. Try again.';
-      setError(msg);
-      addToast(msg, 'error');
+      if (signedUp) {
+        addToast('Account created! Please sign in with your credentials.', 'info');
+        navigate('/login', { replace: true });
+      } else {
+        const msg = err.response?.data?.message || err.response?.data?.error || 'Registration failed. Try again.';
+        setError(msg);
+        addToast(msg, 'error');
+      }
     } finally {
       setLoading(false);
     }

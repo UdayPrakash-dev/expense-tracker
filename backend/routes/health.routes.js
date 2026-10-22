@@ -21,7 +21,7 @@ healthRouter.get('/', async (req, res) => {
     if (isDbConnected) {
         try {
             // Actively ping the database to verify roundtrip latency
-            await mongoose.connection.db.admin().ping();
+            await mongoose.connection?.db?.admin?.().ping();
             dbLatency = `${Date.now() - startTime}ms`;
             isDbResponsive = true;
         } catch (err) {

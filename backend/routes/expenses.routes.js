@@ -49,9 +49,39 @@ expensesRouter.post('/', authMiddleware, expensesController.addExpenses);
 
 /**
  * @openapi
- * /expenses/getExpenses:
+ * /expenses:
  *   get:
  *     summary: Get all expenses
+ *     description: Retrieves all expenses belonging to the authenticated user, sorted latest first.
+ *     tags: [Expenses]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of records to return
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *     responses:
+ *       200:
+ *         description: List of expenses retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Expense'
+ *       401:
+ *         description: Unauthorized
+ * 
+ * /expenses/getExpenses:
+ *   get:
+ *     summary: Get all expenses (legacy alias)
  *     description: Retrieves all expenses belonging to the authenticated user, sorted latest first.
  *     tags: [Expenses]
  *     security:
@@ -69,6 +99,7 @@ expensesRouter.post('/', authMiddleware, expensesController.addExpenses);
  *         description: Unauthorized
  */
 expensesRouter.get('/getExpenses', authMiddleware, expensesController.getExpenses);
+expensesRouter.get('/', authMiddleware, expensesController.getExpenses);
 
 /**
  * @openapi

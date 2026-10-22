@@ -130,8 +130,8 @@ The application follows a **client-server architecture** consisting of a React f
 │   ├── auth.middleware.js              # JWT authentication middleware
 │   └── error.middleware.js             # Global error handling middleware
 ├── models/                             # Mongoose schemas/models
-│   ├── expenses.model.js               # Expense model
-│   └── user.model.js                   # User model
+│   ├── expense.model.js                # Expense model
+│   └── users.model.js                  # User model
 ├── routes/                             # API routes
 │   ├── auth.routes.js                  # Authentication routes
 │   ├── expenses.routes.js              # Expense routes

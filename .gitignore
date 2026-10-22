@@ -1,5 +1,7 @@
-# Backend dependencies
+# Dependencies
+node_modules/
 backend/node_modules/
+frontend/node_modules/
 
 # Environment files
 backend/.env
@@ -7,8 +9,12 @@ frontend/.env
 .env
 
 # Build outputs
+dist/
+build/
 backend/dist/
 backend/build/
+frontend/dist/
+frontend/build/
 
 # Logs
 logs/
@@ -20,7 +26,4 @@ logs/
 # IDE files
 .vscode/
 .idea/
-
-#test files
-*.spec.js
-*.test.js
+

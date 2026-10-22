@@ -45,13 +45,19 @@ authRouter.post("/signup", authController.signup);
  *               pass: { type: string, format: password, example: "password123" }
  *     responses:
  *       200:
- *         description: JWT Token generated
+ *         description: JWT Token and user details generated
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 token: { type: string }
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id: { type: string }
+ *                     name: { type: string }
+ *                     email: { type: string }
  *       401:
  *         description: Invalid email or password
  */

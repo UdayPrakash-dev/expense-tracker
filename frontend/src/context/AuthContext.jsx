@@ -7,8 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState(() => {
     try {
+      const storedToken = localStorage.getItem('token');
       const savedUser = localStorage.getItem('user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      return (storedToken && savedUser) ? JSON.parse(savedUser) : null;
     } catch {
       return null;
     }
@@ -27,6 +28,9 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
         }
       }
+    } else {
+      setUser(null);
+      setToken(null);
     }
     setLoading(false);
   }, []);
@@ -37,8 +41,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', data.token);
       setToken(data.token);
       
-      // Store basic user identity
-      const userData = { email, name: email.split('@')[0] };
+      // Store user identity
+      const userData = data.user || { email, name: email.split('@')[0] };
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       return data;

@@ -24,7 +24,7 @@ const ExpenseCreate = () => {
     Merchant: '',
     Category: '',
     Amount: '',
-    Date: new Date().toISOString().split('T')[0],
+    Date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0],
   });
 
   const [loading, setLoading] = useState(false);

@@ -1,6 +1,8 @@
+require("dotenv").config();
 const express = require('express');
 const app = express();
-const PORT = 3000;
+app.set('trust proxy', 1);
+const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -8,7 +10,6 @@ const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
 const connectDB = require("./config/db");
 const setupSwagger = require('./config/swagger');
-require("dotenv").config();
 const errorHandler = require('./middleware/error.middleware');
 
 const expensesRouter = require('./routes/expenses.routes.js');
@@ -18,6 +19,19 @@ const healthRouter = require('./routes/health.routes');
 setupSwagger(app);
 
 app.use(helmet());
+
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    ...(process.env.CLIENT_URL ? [process.env.CLIENT_URL] : [])
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/health', healthRouter);
 
@@ -38,23 +52,12 @@ const generalLimiter = rateLimit({
 });
 
 const authLimiter = rateLimit({
-    windowMs: 3 * 60 * 1000,
-    limit: 4,
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
     message: { error: "Too many attempts to login/signup. Try again later." }
-})
-
-// app.use((req, res, next) => {
-//     const start = Date.now();
-
-//     res.on('finish', () => {
-//         const end = Date.now();
-//         console.log(`${req.method}:${req.url},time taken:${end - start}`);
-//     })
-//     next();
-
-// });
+});
 
 app.use(generalLimiter);
 
@@ -62,27 +65,26 @@ app.get('/', (req, res) => {
     res.send('App is running!');
 });
 
-app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://localhost:3000'
-    ],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
 app.use(express.json());
 
 app.use('/auth', authLimiter, authRouter);
 
 app.use('/expenses', expensesRouter);
 
+app.use((req, res) => {
+    res.status(404).json({ error: "Endpoint not found" });
+});
+
 app.use(errorHandler);
 
 
 async function startServer() {
     try {
+        if (!process.env.JWT_SECRET) {
+            logger.error("FATAL: JWT_SECRET environment variable is not defined.");
+            process.exit(1);
+        }
+
         await connectDB();
 
         app.listen(PORT, () => {
@@ -95,6 +97,8 @@ async function startServer() {
     }
 }
 
-startServer();
+if (require.main === module) {
+    startServer();
+}
 
 module.exports = app;

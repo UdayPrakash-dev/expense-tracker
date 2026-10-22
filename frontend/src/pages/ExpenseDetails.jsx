@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, Trash2, Calendar, Tag, Store, IndianRupee, Clock } from 'lucide-react';
+import { ArrowLeft, Pencil, Trash2, Calendar, Tag, Store, IndianRupee } from 'lucide-react';
 import { getExpenseById, deleteExpense } from '../api/expenses';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/common/Modal';
@@ -108,7 +108,7 @@ const ExpenseDetails = () => {
               Total Amount
             </span>
             <div style={{ fontSize: '2.75rem', fontWeight: 800, color: '#34d399', marginTop: '0.25rem' }}>
-              ₹{Number(expense.Amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ₹{Number(expense.Amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>
 
@@ -148,22 +148,12 @@ const ExpenseDetails = () => {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
+                timeZone: 'UTC',
               })}
             </div>
           </div>
 
-          {/* User ID / Ownership */}
-          {expense.userId && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>
-                <Clock size={16} />
-                <span>Account Owner</span>
-              </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.4rem', fontFamily: 'monospace' }}>
-                {expense.userId}
-              </div>
-            </div>
-          )}
+
 
         </div>
       </div>
@@ -174,7 +164,7 @@ const ExpenseDetails = () => {
         onClose={() => !deleting && setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Delete Expense"
-        message={`Are you sure you want to permanently delete this ${expense.Category} expense from ${expense.Merchant} (₹${Number(expense.Amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})?`}
+        message={`Are you sure you want to permanently delete this ${expense.Category} expense from ${expense.Merchant} (₹${Number(expense.Amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})?`}
         confirmText="Delete Expense"
         confirmVariant="danger"
         loading={deleting}

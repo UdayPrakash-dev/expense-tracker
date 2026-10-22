@@ -37,7 +37,9 @@ const ExpenseEdit = () => {
     const fetchExpense = async () => {
       try {
         const data = await getExpenseById(id);
-        const formattedDate = new Date(data.Date).toISOString().split('T')[0];
+        const formattedDate = data.Date && !isNaN(new Date(data.Date).getTime())
+          ? new Date(data.Date).toISOString().split('T')[0]
+          : '';
         setFormData({
           Merchant: data.Merchant || '',
           Category: data.Category || '',

@@ -25,8 +25,8 @@ const ExpenseTable = ({ expenses = [], onDeleteRequest }) => {
       aVal = new Date(aVal).getTime();
       bVal = new Date(bVal).getTime();
     } else if (sortField === 'Amount') {
-      aVal = Number(aVal);
-      bVal = Number(bVal);
+      aVal = Number(aVal || 0);
+      bVal = Number(bVal || 0);
     } else {
       aVal = String(aVal || '').toLowerCase();
       bVal = String(bVal || '').toLowerCase();
@@ -79,6 +79,7 @@ const ExpenseTable = ({ expenses = [], onDeleteRequest }) => {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
+                    timeZone: 'UTC',
                   })}
                 </td>
                 <td style={{ fontWeight: 600 }}>{expense.Merchant}</td>
@@ -88,12 +89,12 @@ const ExpenseTable = ({ expenses = [], onDeleteRequest }) => {
                   </span>
                 </td>
                 <td className="amount-cell" style={{ textAlign: 'right' }}>
-                  ₹{Number(expense.Amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ₹{Number(expense.Amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
                     <button
-                      onClick={() => navigate(`/${id}`)}
+                      onClick={() => navigate(`/expenses/${id}`)}
                       className="btn btn-secondary btn-icon"
                       title="View Details"
                       aria-label="View Details"

@@ -49,7 +49,7 @@ function App() {
                 }
               />
               <Route
-                path="/:id"
+                path="/expenses/:id"
                 element={
                   <ProtectedRoute>
                     <ExpenseDetails />

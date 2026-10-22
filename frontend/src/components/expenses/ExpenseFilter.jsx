@@ -91,24 +91,22 @@ const ExpenseFilter = ({
         </select>
 
         {/* Category Selector */}
-        {categories.length > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Filter size={16} style={{ color: 'var(--text-muted)' }} />
-            <select
-              className="form-input"
-              style={{ padding: '0.5rem 1.75rem 0.5rem 0.75rem', fontSize: '0.85rem', width: 'auto' }}
-              value={category}
-              onChange={(e) => onCategoryChange(e.target.value)}
-            >
-              <option value="all">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <Filter size={16} style={{ color: 'var(--text-muted)' }} />
+          <select
+            className="form-input"
+            style={{ padding: '0.5rem 1.75rem 0.5rem 0.75rem', fontSize: '0.85rem', width: 'auto' }}
+            value={category}
+            onChange={(e) => onCategoryChange(e.target.value)}
+          >
+            <option value="all">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   );
