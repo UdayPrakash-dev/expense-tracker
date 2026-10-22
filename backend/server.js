@@ -87,7 +87,7 @@ async function startServer() {
 
         await connectDB();
 
-        app.listen(PORT, () => {
+        app.listen(PORT,'0.0.0.0', () => {
             logger.info(`Server is listening at port: ${PORT}`);
         });
     }
